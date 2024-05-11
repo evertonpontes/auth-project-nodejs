@@ -6,3 +6,22 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id             String         @id @default(uuid())
+  name           String
+  email          String         @unique
+  hashedPassword String
+  RefreshToken   RefreshToken[]
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id        String @id @default(uuid())
+  expiresIn Int
+  userId    String
+  user      User   @relation(fields: [userId], references: [id])
+
+  @@map("refresh-tokens")
+}
