@@ -4,7 +4,7 @@ import {
   RegisterUserUseCase,
   userSchema,
 } from "@useCases/registerUser/RegisterUserUseCase";
-import { EmailAlreadyExistsException } from "../exceptions/EmailAlreadyExistsException";
+import { EmailAlreadyExistsException } from "@useCases/exceptions/EmailAlreadyExistsException";
 
 interface IRegisterUserRequest extends Request {
   body: z.infer<typeof userSchema>;
