@@ -17,9 +17,9 @@ class AuthenticateUserController {
     try {
       const { email, password } = userLoginSchema.parse(req.body);
 
-      const token = await authenticateUserUseCase.execute({ email, password });
+      const auth = await authenticateUserUseCase.execute({ email, password });
 
-      res.status(200).send({ token });
+      res.status(200).send(auth);
     } catch (error) {
       if (error instanceof IncorrectEmailPassException) {
         return res.status(400).send({

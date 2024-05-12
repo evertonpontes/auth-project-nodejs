@@ -4,6 +4,8 @@ import jwt from "jsonwebtoken";
 import { z } from "zod";
 import { IncorrectEmailPassException } from "@/useCases/exceptions/IncorrectEmailPassException";
 import { config } from "config/settings";
+import { GenerateRefreshToken } from "@/provider/GenerateRefreshToken";
+import { GenerateTokenProvider } from "@/provider/GenerateTokenProvider";
 
 const userLoginSchema = z.object({
   email: z.string().email({
@@ -38,13 +40,13 @@ class AuthenticateUserUseCase {
       throw new IncorrectEmailPassException("Email or password incorrect!");
     }
     // generate access-token and refresh-token
-    const secretKey = config.ACCESS_TOKEN_SECRET_KEY;
-    const accessToken = jwt.sign({}, secretKey, {
-      subject: user.id,
-      expiresIn: "1m",
-    });
+    const generateTokenProvider = new GenerateTokenProvider();
+    const token = await generateTokenProvider.execute(user.id);
 
-    return accessToken;
+    const generateRefreshToken = new GenerateRefreshToken();
+    const refreshToken = await generateRefreshToken.execute(user.id);
+
+    return { token, refresh_token: refreshToken };
   }
 }
 

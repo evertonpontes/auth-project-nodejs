@@ -8,11 +8,11 @@ datasource db {
 }
 
 model User {
-  id             String         @id @default(uuid())
+  id             String        @id @default(uuid())
   name           String
-  email          String         @unique
+  email          String        @unique
   hashedPassword String
-  RefreshToken   RefreshToken[]
+  RefreshToken   RefreshToken?
 
   @@map("users")
 }
@@ -20,7 +20,7 @@ model User {
 model RefreshToken {
   id        String @id @default(uuid())
   expiresIn Int
-  userId    String
+  userId    String @unique
   user      User   @relation(fields: [userId], references: [id])
 
   @@map("refresh-tokens")
