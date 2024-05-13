@@ -16,3 +16,6 @@ CREATE TABLE "refresh-tokens" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "refresh-tokens_userId_key" ON "refresh-tokens"("userId");

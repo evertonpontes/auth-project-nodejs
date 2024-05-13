@@ -18,9 +18,12 @@ router.post("/refresh-token", refreshTokenUserController.handler);
 
 router.get("/user", ensureAuthentication, (req, res) => {
   const auth = req.auth;
-  res.status(200).send({
-    auth,
-  });
+  res
+    .status(200)
+    .send(
+      "You are authenticated, so you can see this message! User ID: " +
+        auth.userId,
+    );
 });
 
 router.get("/logout", ensureAuthentication, logoutUserController.handler);
