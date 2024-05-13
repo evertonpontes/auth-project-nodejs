@@ -1,10 +1,22 @@
-import express from "express";
+import express, { Request } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { config } from "config/settings";
 import { router } from "@/routes";
 
 const app = express();
+
+interface AuthProp {
+  auth: {
+    userId: string;
+  };
+}
+
+declare global {
+  namespace Express {
+    interface Request extends AuthProp {}
+  }
+}
 
 app.use(cors());
 app.use(cookieParser());

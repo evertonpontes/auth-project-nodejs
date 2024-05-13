@@ -2,10 +2,6 @@ import { config } from "config/settings";
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
-interface IAuthRequest extends Request {
-  auth: string;
-}
-
 function ensureAuthentication(req: Request, res: Response, next: NextFunction) {
   const authToken = req.headers["authorization"];
 
@@ -18,7 +14,11 @@ function ensureAuthentication(req: Request, res: Response, next: NextFunction) {
   const [, token] = authToken.split(" ");
 
   try {
-    jwt.verify(token, config.ACCESS_TOKEN_SECRET_KEY);
+    const auth = jwt.verify(token, config.ACCESS_TOKEN_SECRET_KEY);
+
+    req.auth = {
+      userId: auth.sub as string,
+    };
 
     next();
   } catch (error) {
@@ -28,4 +28,4 @@ function ensureAuthentication(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export { ensureAuthentication, IAuthRequest };
+export { ensureAuthentication };

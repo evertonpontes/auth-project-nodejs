@@ -1,9 +1,7 @@
 import { client } from "@/prisma/prismaClient";
 import { compare } from "bcrypt";
-import jwt from "jsonwebtoken";
 import { z } from "zod";
 import { IncorrectEmailPassException } from "@/useCases/exceptions/IncorrectEmailPassException";
-import { config } from "config/settings";
 import { GenerateRefreshToken } from "@/provider/GenerateRefreshToken";
 import { GenerateTokenProvider } from "@/provider/GenerateTokenProvider";
 
@@ -39,6 +37,13 @@ class AuthenticateUserUseCase {
     if (!passwordMatch) {
       throw new IncorrectEmailPassException("Email or password incorrect!");
     }
+    // delete some refresh-token if exists
+    await client.refreshToken.deleteMany({
+      where: {
+        userId: user.id,
+      },
+    });
+
     // generate access-token and refresh-token
     const generateTokenProvider = new GenerateTokenProvider();
     const token = await generateTokenProvider.execute(user.id);
